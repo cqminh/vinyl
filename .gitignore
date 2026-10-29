@@ -49,3 +49,13 @@ app.*.map.json
 
 /docs/
 /CLAUDE.md
+
+*.jks
+*.keystore
+android/key.properties
+**/*-firebase-adminsdk-*.json
+.env
+.env.*
+!.env.example
+.firebase/
+firebase-debug.log

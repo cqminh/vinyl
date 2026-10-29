@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:vinyl/core/config/app_config.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+class App extends StatelessWidget {
+  const App({
+    super.key,
+    required this.config
+  });
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final AppConfig config;
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const Scaffold(
-        body: Center(child: Text('Vinyl')),
+      home: Scaffold(
+        body: Center(child: Text('Vinyl - ${config.flavor.name}')),
       ),
     );
   }
