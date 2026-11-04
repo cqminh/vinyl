@@ -12,8 +12,15 @@ class AuthRepository {
     await _auth.signInAnonymously();
   }
 
-  Stream<AppUser?> get authStateChanges => 
-    _auth.authStateChanges().map((user) => 
+  Future<void> linkWithGoogle() async {
+    final currentUser = _auth.currentUser 
+      ?? (throw StateError('linkWithGoogle called with no signed-in user'));
+
+    await currentUser.linkWithPopup(GoogleAuthProvider());
+  }
+
+  Stream<AppUser?> get userChanges => 
+    _auth.userChanges().map((user) => 
       user == null 
         ? null 
         : AppUser(

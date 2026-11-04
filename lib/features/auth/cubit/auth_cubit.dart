@@ -9,7 +9,7 @@ class AuthCubit extends Cubit<AuthState>{
   AuthCubit(
     this._authRepository
   ) : super(const AuthUnknown()) {
-    _subscription = _authRepository.authStateChanges.listen(_onUserChanged);
+    _subscription = _authRepository.userChanges.listen(_onUserChanged);
   }
 
   final AuthRepository _authRepository;
@@ -23,6 +23,10 @@ class AuthCubit extends Cubit<AuthState>{
     emit(user.isAnonymous 
       ? AuthGuest(user: user) 
       : AuthSignedIn(user: user));
+  }
+
+  Future<void> signInWithGoogle() async {
+    await _authRepository.linkWithGoogle();
   }
 
   @override

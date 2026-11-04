@@ -18,7 +18,7 @@ void main() {
   });
 
   test('state ban đầu là AuthUnknown', () {
-    when(() => authRepository.authStateChanges)
+    when(() => authRepository.userChanges)
         .thenAnswer((_) => const Stream.empty());
 
     final cubit = AuthCubit(authRepository);
@@ -31,7 +31,7 @@ void main() {
   blocTest<AuthCubit, AuthState>(
     'emit AuthGuest khi stream phát user ẩn danh', 
     setUp: () {
-      when(() => authRepository.authStateChanges)
+      when(() => authRepository.userChanges)
         .thenAnswer((_) => Stream.value(guestUser));
     },
     build: () => AuthCubit(authRepository),
@@ -45,7 +45,7 @@ void main() {
   blocTest<AuthCubit, AuthState>(
     'emit AuthSignedIn khi stream phát user Google', 
     setUp: () {
-      when(() => authRepository.authStateChanges)
+      when(() => authRepository.userChanges)
         .thenAnswer((_) => Stream.value(googleUser));
     },
     build: () => AuthCubit(authRepository),
@@ -59,7 +59,7 @@ void main() {
   blocTest<AuthCubit, AuthState>(
     'xác nhận signInAnonymously đã bị gọi đúng 1 lần', 
     setUp: () {
-      when(() => authRepository.authStateChanges)
+      when(() => authRepository.userChanges)
         .thenAnswer((_) => Stream.value(null));
 
       when(() => authRepository.signInAnonymously())

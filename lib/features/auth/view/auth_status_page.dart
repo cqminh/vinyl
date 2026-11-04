@@ -15,7 +15,16 @@ class AuthStatusPage extends StatelessWidget {
             return switch (state) {
               AuthUnknown() => CircularProgressIndicator(),
               AuthGuest(:final user) => 
-                Text('Khách - UID: ${user.uid}'),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Khách - UID: ${user.uid}'),
+                    TextButton(
+                      onPressed: () => context.read<AuthCubit>().signInWithGoogle(), 
+                      child: Text('Login with Google')
+                    )
+                  ],
+                ),
               AuthSignedIn(:final user) =>
                 Text('Đã đăng nhập - UID: ${user.uid}'),
             };
