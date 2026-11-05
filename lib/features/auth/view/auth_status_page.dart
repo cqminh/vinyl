@@ -37,7 +37,6 @@ class AuthStatusPage extends StatelessWidget {
 
 class _GuestView extends StatelessWidget {
   const new({
-    super.key,
     required this.user
   });
 
@@ -60,7 +59,6 @@ class _GuestView extends StatelessWidget {
 
 class _SignedInView extends StatelessWidget {
   const new({
-    super.key,
     required this.user
   });
 
@@ -68,6 +66,15 @@ class _SignedInView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('Đã đăng nhập - UID: ${user.uid}');
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Đã đăng nhập - UID: ${user.uid}'),
+        TextButton(
+          onPressed: () => context.read<AuthCubit>().signOut(), 
+          child: Text('Logout')
+        )
+      ],
+    );
   }
 }

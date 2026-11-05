@@ -35,6 +35,10 @@ class AuthCubit extends Cubit<AuthState>{
     }
   }
 
+  Future<void> signOut() async {
+    await _authRepository.signOut();
+  }
+
   @override
   Future<void> close() async {
     await _subscription.cancel();
