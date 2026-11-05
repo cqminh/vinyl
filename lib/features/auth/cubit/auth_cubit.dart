@@ -26,7 +26,13 @@ class AuthCubit extends Cubit<AuthState>{
   }
 
   Future<void> signInWithGoogle() async {
-    await _authRepository.linkWithGoogle();
+    final previous = state;
+    try {
+      await _authRepository.linkWithGoogle();
+    } on Exception {
+      emit(AuthFailure(message: 'Cannot sign in with Google, please try again!'));
+      emit(previous);
+    }
   }
 
   @override

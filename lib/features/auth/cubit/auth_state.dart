@@ -33,3 +33,14 @@ final class AuthSignedIn extends AuthState {
   @override
   List<Object?> get props => [user];
 }
+
+final class AuthFailure extends AuthState {
+  const AuthFailure({
+    required this.message,
+  });
+
+  final String message;
+
+  @override
+  List<Object?> get props => [message];
+}
