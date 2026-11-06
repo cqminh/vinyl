@@ -4,9 +4,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vinyl/features/auth/cubit/auth_cubit.dart';
 import 'package:vinyl/features/auth/cubit/auth_state.dart';
 import 'package:vinyl/features/auth/data/app_user.dart';
-import 'package:vinyl/features/auth/data/auth_repository.dart';
 
-class MockAuthRepository extends Mock implements AuthRepository {}
+import '../../../helpers/mock.dart';
 
 void main() {
   const guestUser = AppUser(uid: 'guest-1', isAnonymous: true);
