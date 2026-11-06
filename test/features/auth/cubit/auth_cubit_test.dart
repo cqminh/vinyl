@@ -15,12 +15,11 @@ void main() {
 
   setUp(() {
     authRepository = MockAuthRepository();
+    when(() => authRepository.userChanges)
+      .thenAnswer((_) => const Stream.empty());
   });
 
   test('state ban đầu là AuthUnknown', () {
-    when(() => authRepository.userChanges)
-        .thenAnswer((_) => const Stream.empty());
-
     final cubit = AuthCubit(authRepository);
 
     expect(cubit.state, const AuthUnknown());
@@ -65,10 +64,73 @@ void main() {
       when(() => authRepository.signInAnonymously())
         .thenAnswer((_) async {});
     },
+    build: () => AuthCubit(authRepository),
+    expect: () => [],
     verify: (_) {
       verify(() => authRepository.signInAnonymously()).called(1);
     },
+  );
+
+  blocTest<AuthCubit, AuthState>(
+    'signInWithGoogle thành công thì không emit gì', 
+    setUp: () {
+      when(() => authRepository.linkWithGoogle())
+        .thenAnswer((_) async {});
+    },
     build: () => AuthCubit(authRepository),
+    act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [],
+    verify: (_) {
+      verify(() => authRepository.linkWithGoogle()).called(1);
+    },
+  );
+
+  blocTest<AuthCubit, AuthState>(
+    'signInWithGoogle lỗi → AuthFailure rồi trở về state cũ', 
+    setUp: () {
+      when(() => authRepository.linkWithGoogle())
+        .thenThrow(Exception());
+    },
+    build: () => AuthCubit(authRepository),
+    seed: () => AuthGuest(user: guestUser),
+    act: (cubit) => cubit.signInWithGoogle(),
+    expect: () => [
+      isA<AuthFailure>(),
+      AuthGuest(user: guestUser)
+    ],
+  );
+
+  blocTest<AuthCubit, AuthState>(
+    'lỗi 2 lần liên tiếp → SnackBar hiện cả 2 lần',
+    setUp: () {
+      when(() => authRepository.linkWithGoogle())
+        .thenThrow(Exception());
+    },
+    build: () => AuthCubit(authRepository),
+    seed: () => AuthGuest(user: guestUser), 
+    act: (cubit) async {
+      await cubit.signInWithGoogle();
+      await cubit.signInWithGoogle();
+    },
+    expect: () => [
+      isA<AuthFailure>(),
+      const AuthGuest(user: guestUser),
+      isA<AuthFailure>(),
+      const AuthGuest(user: guestUser)
+    ],
+  );
+
+  blocTest<AuthCubit, AuthState>(
+    'signOut chỉ gọi repository', 
+    setUp: () {
+      when(() => authRepository.signOut())
+        .thenAnswer((_) async {});
+    },
+    build: () => AuthCubit(authRepository),
+    act: (cubit) => cubit.signOut(),
+    expect: () => [],
+    verify: (_) {
+      verify(() => authRepository.signOut()).called(1);
+    },
   );
 }
